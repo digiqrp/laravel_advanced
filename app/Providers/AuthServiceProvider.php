@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App/Team' => 'App\Polices\TeamPolicy'
     ];
 
     /**
@@ -24,7 +25,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
+        \Auth::viaRequest('email',function($request){
+            return \App\User::where('email',$request->email)->first();
+        });
         //
     }
 }

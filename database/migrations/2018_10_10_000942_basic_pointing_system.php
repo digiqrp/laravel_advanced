@@ -13,31 +13,39 @@ class BasicPointingSystem extends Migration
      */
     public function up()
     {
-        Schema::create('teams', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('teams')){
+            Schema::create('teams', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('title');
+                $table->timestamps();
+            });
+        }
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedInteger('team_id')->nullable()->index('team_id')->after('password');
-        });
+        if (Schema::hasTable('users')){
+            Schema::table('users', function (Blueprint $table) {
+                $table->unsignedInteger('team_id')->nullable()->index('team_id')->after('password');
+            });
+        }
 
-        Schema::create('tickets', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title');
-            $table->longText('description')->nullable();
-            $table->unsignedInteger('team_id')->index('team_id');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('tickets')){
+            Schema::create('tickets', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('title');
+                $table->longText('description')->nullable();
+                $table->unsignedInteger('team_id')->index('team_id');
+                $table->timestamps();
+            });
+        }
 
-        Schema::create('points', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('value')->index('value');
-            $table->unsignedInteger('ticket_id')->index('ticket_id');
-            $table->unsignedInteger('owner_id')->index('owner_id');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('points')){
+            Schema::create('points', function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('value')->index('value');
+                $table->unsignedInteger('ticket_id')->index('ticket_id');
+                $table->unsignedInteger('owner_id')->index('owner_id');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
